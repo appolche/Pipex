@@ -6,7 +6,7 @@
 /*   By: dleaves <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 17:40:29 by dleaves           #+#    #+#             */
-/*   Updated: 2021/08/22 17:40:33 by dleaves          ###   ########.fr       */
+/*   Updated: 2021/08/25 17:55:35 by dleaves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 
-int	show_error(char *message);
+void	show_error(char *message);
+void	absolute_path_exec(char **cmd);
 
 #endif

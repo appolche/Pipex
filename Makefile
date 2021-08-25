@@ -1,5 +1,5 @@
 NAME = pipex
-SRC = pipex.c show_error.c
+SRC = pipex.c absolute_path_exec.c
 OBJS = $(SRC:.c=.o)
 FLAGS = -Wall -Werror -Wextra -g
 LFLAGS = -L $(LDIR) -lft

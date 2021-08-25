@@ -15,14 +15,16 @@
 static void	path_search(char **path, char **cmd)
 {
 	char	*final_path;
+	char	*tmp;
 	int		j;
 
-	j = 1;
-	while (path[j])
+	j = 0;
+	while (path[++j])
 	{
-		final_path = ft_strjoin(path[j], "/");
-		final_path = ft_strjoin(final_path, cmd[0]);
-		if (!access(final_path, 0))
+		tmp = ft_strjoin(path[j], "/");
+		final_path = ft_strjoin(tmp, cmd[0]);
+		free (tmp);
+		if (!access(final_path, X_OK))
 		{
 			if (execve(final_path, cmd, 0) == -1)
 			{
@@ -30,13 +32,13 @@ static void	path_search(char **path, char **cmd)
 				malloc_free(cmd);
 				if (final_path)
 					free(final_path);
-				show_error("Error: Cmd execution failed");
+				show_error("Error: Cmd execution failed\n");
 			}
 		}
 		if (final_path)
 			free(final_path);
-		j++;
 	}
+	malloc_free(path);
 }
 
 static void	ft_exec(char **cmd, char **envp)
@@ -46,6 +48,8 @@ static void	ft_exec(char **cmd, char **envp)
 
 	i = 0;
 	path = NULL;
+	if (cmd[0][0] == '/' || (cmd[0][0] == '.' && cmd[0][1] == '/'))
+		absolute_path_exec(cmd);
 	while (envp[i])
 	{
 		if ((ft_strnstr(envp[i], "PATH=", 5)))
@@ -57,36 +61,31 @@ static void	ft_exec(char **cmd, char **envp)
 	}
 	if (path)
 		path_search(path, cmd);
-	malloc_free(cmd);
-	if (path)
-		malloc_free(path);
-	show_error("Error: Path not found");
+	if (cmd)
+		malloc_free(cmd);
+	show_error("Error: Path not found\n");
 }
 
 void	child_proc(char **argv, char **envp, int pipe_fd[2], int file_fd[2])
 {
-	int		new_file_fd;
-	int		new_pipe_fd;
 	char	**cmd;
 
 	close(pipe_fd[0]);
-	new_pipe_fd = dup2(pipe_fd[1], 1);
+	dup2(pipe_fd[1], 1);
 	close(pipe_fd[1]);
-	new_file_fd = dup2(file_fd[0], 0);
+	dup2(file_fd[0], 0);
 	cmd = ft_split(*argv, ' ');
 	ft_exec(cmd, envp);
 }
 
 void	parent_proc(char **argv, char **envp, int pipe_fd[2], int file_fd[2])
 {
-	int		new_file_fd;
-	int		new_pipe_fd;
 	char	**cmd;
 
 	close(pipe_fd[1]);
-	new_pipe_fd = dup2(pipe_fd[0], 0);
+	dup2(pipe_fd[0], 0);
 	close(pipe_fd[0]);
-	new_file_fd = dup2(file_fd[1], 1);
+	dup2(file_fd[1], 1);
 	cmd = ft_split(*argv, ' ');
 	ft_exec(cmd, envp);
 }
@@ -98,18 +97,18 @@ int	main(int argc, char **argv, char **envp)
 	pid_t	pid;
 
 	if (argc != 5)
-		show_error("Usage Error: ./pipex file1 cmd1 cmd2 file2");
+		show_error("Usage Error: ./pipex file1 cmd1 cmd2 file2\n");
 	if (pipe(pipe_fd) == -1)
-		show_error("Error: Pipe");
+		show_error("Error: Pipe\n");
 	file_fd[0] = open(argv[1], O_RDONLY);
 	if (file_fd[0] == -1)
-		show_error("Error: Open file1 failed");
-	file_fd[1] = open(argv[4], O_WRONLY | O_CREAT, 0666);
+		show_error("Error: Open file1 failed\n");
+	file_fd[1] = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (file_fd[1] == -1)
-		show_error("Error: Open file2 failed");
+		show_error("Error: Open file2 failed\n");
 	pid = fork();
 	if (pid == -1)
-		show_error("Error: Fork");
+		show_error("Error: Fork\n");
 	if (pid == 0)
 		child_proc(&argv[2], envp, pipe_fd, file_fd);
 	else
