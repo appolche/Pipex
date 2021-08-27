@@ -18,11 +18,11 @@ void	show_error(char *message)
 	exit(1);
 }
 
-void	absolute_path_exec(char **cmd)
+void	absolute_path_exec(char **cmd, char **envp)
 {
 	if (!access(cmd[0], X_OK))
 	{
-		if (execve(cmd[0], cmd, 0) == -1)
+		if (execve(cmd[0], cmd, envp) == -1)
 			malloc_free(cmd);
 		show_error("Error: Cmd execution failed\n");
 	}

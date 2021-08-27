@@ -6,7 +6,7 @@
 /*   By: dleaves <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 17:42:21 by dleaves           #+#    #+#             */
-/*   Updated: 2021/08/22 17:42:22 by dleaves          ###   ########.fr       */
+/*   Updated: 2021/08/25 18:00:56 by dleaves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *s);
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char	**malloc_free(char **tab);
 
 #endif

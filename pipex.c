@@ -6,13 +6,13 @@
 /*   By: dleaves <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 17:40:17 by dleaves           #+#    #+#             */
-/*   Updated: 2021/08/22 17:40:22 by dleaves          ###   ########.fr       */
+/*   Updated: 2021/08/25 18:02:16 by dleaves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	path_search(char **path, char **cmd)
+static void	path_search(char **path, char **cmd, char **envp)
 {
 	char	*final_path;
 	char	*tmp;
@@ -26,7 +26,7 @@ static void	path_search(char **path, char **cmd)
 		free (tmp);
 		if (!access(final_path, X_OK))
 		{
-			if (execve(final_path, cmd, 0) == -1)
+			if (execve(final_path, cmd, envp) == -1)
 			{
 				malloc_free(path);
 				malloc_free(cmd);
@@ -49,7 +49,7 @@ static void	ft_exec(char **cmd, char **envp)
 	i = 0;
 	path = NULL;
 	if (cmd[0][0] == '/' || (cmd[0][0] == '.' && cmd[0][1] == '/'))
-		absolute_path_exec(cmd);
+		absolute_path_exec(cmd, envp);
 	while (envp[i])
 	{
 		if ((ft_strnstr(envp[i], "PATH=", 5)))
@@ -60,7 +60,7 @@ static void	ft_exec(char **cmd, char **envp)
 		i++;
 	}
 	if (path)
-		path_search(path, cmd);
+		path_search(path, cmd, envp);
 	if (cmd)
 		malloc_free(cmd);
 	show_error("Error: Path not found\n");

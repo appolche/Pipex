@@ -6,7 +6,7 @@
 /*   By: dleaves <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 17:40:29 by dleaves           #+#    #+#             */
-/*   Updated: 2021/08/25 17:55:35 by dleaves          ###   ########.fr       */
+/*   Updated: 2021/08/25 18:01:23 by dleaves          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,6 @@
 # include <fcntl.h>
 
 void	show_error(char *message);
-void	absolute_path_exec(char **cmd);
+void	absolute_path_exec(char **cmd, char **envp);
 
 #endif
